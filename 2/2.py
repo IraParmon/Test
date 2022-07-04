@@ -13,4 +13,3 @@ for i in range(len(a)):
 for i in l:
     if l.count(i) == 1:         #если элемент повторяется 1 раз
         print(i)
-
