@@ -9,9 +9,8 @@ a = input().split()
 l = []
 for i in range(len(a)):
     l.append(a[i])
-print(l)
 
 for i in l:
-    if l.count(i) == 1:
+    if l.count(i) == 1:         #если элемент повторяется 1 раз
         print(i)
 
