@@ -5,14 +5,14 @@ from lesson4.triangle import get_square2, get_perim2
 r = int(input("Введите радиус: "))
 print(get_square(r))
 
-a = int(input())
-b = int(input())
-c = int(input())
+a = int(input("Введите a треугольника: "))
+b = int(input("Введите b треугольника: "))
+c = int(input("Введите c треугольника: "))
 
 print(get_square2(a, b, c))
 print(get_perim2(a, b, c))
 
-d = int(input())
-e = int(input())
+d = int(input("Введите ширину прямоугольника: "))
+e = int(input("Введите высоту прямоугольника: "))
 print(get_square3(d, e))
 print(get_perim3(d, e))
