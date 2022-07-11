@@ -8,7 +8,6 @@ def read_input():
     yyyy = in_str[2]
     return int(dd), int(mm), int(yyyy)
 
-
 def fun_date(dd, mm, yyyy):
     if dd <= 0 or dd >= 32 or mm <= 00 or mm >= 13 or yyyy <= 0000:
         return "FALSE"
