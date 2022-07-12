@@ -1,2 +1,0 @@
-def month(a)
-    return
