@@ -18,4 +18,3 @@ for l in test_str:
         my_dict[l] = 1  #буква не в словаре
 
 print(my_dict)
-
