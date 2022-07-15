@@ -10,7 +10,7 @@ def get_koren(A, B, C):
     if D == 0:
         return int(-B / 2 * A)
     elif D > 0:
-        return int(x1), int(x2)
+        return f"{int(x1)}, {int(x2)}"
     elif D < 0:
         return "Нет корней"
 
