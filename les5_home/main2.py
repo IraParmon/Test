@@ -1,6 +1,5 @@
-
+# coding=utf-8
 student_names = []
-
 
 while True:
     data = input()  # [add, Ivan, Ivanov]
@@ -15,29 +14,30 @@ while True:
         print(student_names)
 
     if command == "mark":  # mark <Оценка> <Номер>
-        mark = data.split()[1]
+        mark = int(data.split()[1])
         number = int(data.split()[2])
 
-        student1 = student_names[number-1]
+        student1 = student_names[number - 1]
         student1["marks"].append(mark)
-        #print(student1)
+        # print(student1)
 
-
-    if command == "delete":
+    if command == "delete":  # delete <Номер>
         number = int(data.split()[1])
-        print(student_names.pop(number-1))
+        student_names.pop(number - 1)
 
-    # if command == "edit":
-    #     number = int(data.split()[1])
-    #     name = data.split()[2]
-    #     sname = data.split()[3]
-    #     student2 = student_names[number-1]
-    #     student2["name"].append(name)
-    #     print(student2)
+    if command == "edit":  # edit <Номер> <Имя> <Фамилия> 	Изменяет имя
+        number = int(data.split()[1])
+        name = data.split()[2]
+        sname = data.split()[3]
+        student2 = student_names[number - 1]
+        student2["name"] = name + ' ' + sname
+        # print(student2)
 
-    # if command == "average":
-    #     for k, v in new_student.items():
-    #         print(f'{mark}')
+    if command == "average":  # average <Оценка>
+        number = int(data.split()[1])
+        student1 = student_names[number - 1]
+        average = int(sum(student1["marks"]) / len(student1["marks"]))
+        print(average)
 
     if command == "exit":
         break
