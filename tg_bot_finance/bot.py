@@ -2,9 +2,10 @@ import telebot
 
 from telebot import types
 
+from translate import Translator
 
-from register import create_table_inc, get_sum2, get_sum1, get_sum, create_table_exp, get_sum_ex, \
-    get_sum_ex2, get_sum_August, get_sum_September, get_sum_ех_August
+from register import create_table_inc, get_sum2_inc, get_sum1_inc, get_sum_inc, create_table_exp, get_sum_ex, \
+    get_sum_ex2, get_sum_inc_month, get_sum_month
 
 from datetime import datetime
 
@@ -13,41 +14,40 @@ bot = telebot.TeleBot('5248756848:AAENL3NfNeNJWnHthybUTGYkK5aPD-7reAo')
 
 @bot.message_handler(commands=['all'])
 def all_inc(message):
-    income_sum = get_sum()
-    income_sum1 = get_sum1()
-    income_sum2 = get_sum2()
+    income_sum = get_sum_inc()
+    income_sum1 = get_sum1_inc()
+    income_sum2 = get_sum2_inc()
     bot.send_message(message.chat.id, f'Сумма доходов ⬆: {income_sum[0][0]} руб.')
     bot.send_message(message.chat.id, f' Зарплата: {income_sum1[0][0]} руб. Переводы: {income_sum2[0][0]} руб.')
     return start(message)
 
 
 def all_inc_month(message):
-    income_sum3 = get_sum_August()
-    bot.send_message(message.chat.id, f' Доходы за август: {income_sum3[0][0]} руб.')
-    income_sum4 = get_sum_September()
-    bot.send_message(message.chat.id, f' Доходы за сентябрь: {income_sum4[0][0]} руб.')
+    translator = Translator(to_lang="ru")
+    translation = translator.translate(datetime.now().strftime("%B"))
+    income_sum3 = get_sum_inc_month()
+    bot.send_message(message.chat.id, f' Доходы за {translation}: {income_sum3[0][0]} руб.')
     return start(message)
 
 def all_exp_month(message):
-    income_sum5 = get_sum_ех_August()
-    bot.send_message(message.chat.id, f' Расходы за август: {income_sum5[0][0]} руб.')
+    income_sum4 = get_sum_month()
+    translator = Translator(to_lang="ru")
+    translation = translator.translate(datetime.now().strftime("%B"))
+    bot.send_message(message.chat.id, f' Расходы за {translation}: {income_sum4[0][0]} руб.')
 
     return start(message)
 
 
 def all_exp(message):
     expense_sum = get_sum_ex()
-    expense_sum2 = get_sum_ex2()
+    expense_sum2 = dict(get_sum_ex2())
+
     bot.send_message(message.chat.id, f'Сумма расходов ⬇: {expense_sum[0][0]} руб.')
-    bot.send_message(message.chat.id, f'  {expense_sum2}  руб.')
-                                      # f'{expense_sum2[1][0]}: {expense_sum2[1][1]} руб.'
-                                      # f'{expense_sum2[2][0]}: {expense_sum2[2][1]} руб.'
-                                      # f'{expense_sum2[3][0]}: {expense_sum2[3][1]} руб.')
-                                      # f'{expense_sum2[4][0]}: {expense_sum2[4][1]} руб.'
-                                      # f'{expense_sum2[5][0]}: {expense_sum2[5][1]} руб.'
-                                      # f'{expense_sum2[6][0]}: {expense_sum2[6][1]} руб.'
-                                      # f'{expense_sum2[7][0]}: {expense_sum2[7][1]} руб.'
-                                      # f'{expense_sum2[8][0]}: {expense_sum2[8][1]} руб.' )
+    text=''
+    for k,v in expense_sum2.items():
+        text+=f'{k}: {v} руб.\n'
+    bot.send_message(message.chat.id, text)
+
     return start(message)
 
 @bot.message_handler(commands=['start'])
@@ -105,17 +105,32 @@ def read_type_inc(message):
     elif message.text == "Перевод":
         read_inc(message)
 
-def read_inc(message):
-    INCOME = message.text
+def read_inc(message, INCOME=None):
+    if INCOME is None:
+        INCOME = message.text
+    else:
+        INCOME=INCOME
     bot.send_message(message.chat.id, f"Введите сумму:")
     bot.register_next_step_handler(message, read_SUM, INCOME)
 
+
 def read_SUM(message, INCOME):
     SUM = message.text
-    DATE = datetime.now().date()
-    bot.send_message(message.chat.id, f"Доход записан")
-    create_table_inc(DATE, INCOME, SUM)
-    return start(message)
+    if SUM.isdigit():
+        DATE = datetime.now().date()
+        bot.send_message(message.chat.id, f"Доход записан")
+        create_table_inc(DATE, INCOME, SUM)
+        return start(message)
+    else:
+        try:
+            float(SUM)
+            DATE = datetime.now().date()
+            bot.send_message(message.chat.id, f"Доход записан")
+            create_table_exp(DATE, INCOME, SUM)
+            return start(message)
+        except ValueError:
+            bot.send_message(message.chat.id, f"Cумма должна быть числом!")
+            return read_inc(message, INCOME)
 
 
 def button_expenses(message):
@@ -144,8 +159,11 @@ def read_type_exp(message):
     else:
         read_exp(message)
 
-def read_exp(message):
-    EXPENSE = message.text
+def read_exp(message, EXPENSE=None):
+    if EXPENSE is None:
+        EXPENSE = message.text
+    else:
+        EXPENSE=EXPENSE
     bot.send_message(message.chat.id, f"Введите сумму:")
     bot.register_next_step_handler(message, read_SUM_exp, EXPENSE)
 
@@ -165,7 +183,7 @@ def read_SUM_exp(message, EXPENSE):
             return start(message)
         except ValueError:
             bot.send_message(message.chat.id, f"Cумма должна быть числом!")
-            return button_expenses(message)
+            return read_exp(message, EXPENSE)
 
 
 
