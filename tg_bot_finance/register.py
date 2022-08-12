@@ -1,7 +1,7 @@
 import sqlite3
 from datetime import datetime
 
-DATE=datetime.now().date()
+DATE = datetime.now().date()
 
 def create_table_inc(DATE, INCOME, SUM):
     con = sqlite3.connect('date.db')
@@ -24,7 +24,7 @@ def create_table_exp(DATE, EXPENSE, SUM):
     cur.execute(
         f"""
             INSERT INTO expenses
-            (DATE, INCOME, SUM)
+            (DATE, EXPENSE, SUM)
             VALUES('{DATE}', '{EXPENSE}', '{SUM}');
         """
     )
@@ -44,9 +44,7 @@ def get_all_users():
     return res
 
 
-
-
-def get_sum():
+def get_sum_inc():
     con = sqlite3.connect('date.db')
     cur = con.cursor()
 
@@ -58,7 +56,7 @@ def get_sum():
     return res
 
 
-def get_sum1():
+def get_sum1_inc():
     con = sqlite3.connect('date.db')
     cur = con.cursor()
 
@@ -69,7 +67,7 @@ def get_sum1():
     con.close()
     return res
 
-def get_sum2():
+def get_sum2_inc():
     con = sqlite3.connect('date.db')
     cur = con.cursor()
 
@@ -80,23 +78,13 @@ def get_sum2():
     con.close()
     return res
 
-def get_sum_August():
+
+def get_sum_inc_month():
     con = sqlite3.connect('date.db')
     cur = con.cursor()
 
     res = cur.execute(
-        f""" SELECT SUM(SUM) FROM income WHERE  strftime('%m',DATE)='08';  """
-    )
-    res = res.fetchall()
-    con.close()
-    return res
-
-def get_sum_September():
-    con = sqlite3.connect('date.db')
-    cur = con.cursor()
-
-    res = cur.execute(
-        f""" SELECT SUM(SUM) FROM income WHERE  strftime('%m',DATE)='09';  """
+        f""" SELECT SUM(SUM) FROM income WHERE   strftime('%m',DATE)='{str(datetime.now().month).zfill(2)}';  """
     )
     res = res.fetchall()
     con.close()
@@ -119,25 +107,20 @@ def get_sum_ex2():
     cur = con.cursor()
 
     res = cur.execute(
-        f""" SELECT INCOME, SUM(SUM) as sum FROM expenses GROUP BY INCOME; """
+        f""" SELECT EXPENSE, SUM(SUM) as sum FROM expenses GROUP BY EXPENSE; """
     )
     res = res.fetchall()
     con.close()
     return res
 
-def get_sum_ех_August():
+def get_sum_month():
     con = sqlite3.connect('date.db')
     cur = con.cursor()
 
     res = cur.execute(
-        f""" SELECT SUM(SUM) FROM expenses WHERE  strftime('%m',DATE)='08';  """
+        f""" SELECT SUM(SUM) FROM expenses WHERE strftime('%m',DATE)='{str(datetime.now().month).zfill(2)}';  """
     )
     res = res.fetchall()
     con.close()
     return res
-
-
-
-# if __name__ == "__main__":
-
 
