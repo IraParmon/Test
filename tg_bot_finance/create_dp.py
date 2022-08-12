@@ -25,7 +25,7 @@ if __name__ == "__main__":
         CREATE TABLE expenses 
         (
         DATE text,
-        INCOME text,
+        EXPENSE text,
         SUM int
         )
         """
